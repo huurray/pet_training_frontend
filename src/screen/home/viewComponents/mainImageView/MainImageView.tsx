@@ -1,9 +1,15 @@
 import React, {FunctionComponent} from 'react';
-import {View, Image, Text, StyleSheet} from 'react-native';
+import {
+  View,
+  Image,
+  Text,
+  StyleSheet,
+  TouchableWithoutFeedback,
+} from 'react-native';
 import constant from '../../../../../constant';
 import cStyles from '../../../../../cStyles';
 
-const MainImageView: FunctionComponent<any> = ({}) => {
+const MainImageView: FunctionComponent<any> = ({navigation}) => {
   return (
     <View>
       <View>
@@ -13,9 +19,14 @@ const MainImageView: FunctionComponent<any> = ({}) => {
           source={require('../../../../../assets/image/homeMain.png')}
         />
       </View>
-      <View style={styles.detailButtonWrapper}>
-        <Text style={styles.detailButtonText}>자세히 보러가기</Text>
-      </View>
+      <TouchableWithoutFeedback
+        onPress={() => {
+          navigation.navigate('MoveToDetail');
+        }}>
+        <View style={styles.detailButtonWrapper}>
+          <Text style={styles.detailButtonText}>자세히 보러가기</Text>
+        </View>
+      </TouchableWithoutFeedback>
     </View>
   );
 };

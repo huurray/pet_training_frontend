@@ -12,10 +12,11 @@ import {ApolloLink, Observable, split} from 'apollo-link';
 import {WebSocketLink} from 'apollo-link-ws';
 import {getMainDefinition} from 'apollo-utilities';
 import MainNavigation from './navigation/MainNavigation';
+import {withClientState} from 'apollo-link-state';
 
 const App = () => {
   const [loaded, setLoaded] = useState(false);
-  const [client, setClient] = useState(null);
+  const [client, setClient] = useState<any>(null);
   const [splashFinish, setSplashFinish] = useState(false);
 
   const preLoad = async () => {
@@ -23,6 +24,7 @@ const App = () => {
       const cache = new InMemoryCache();
       const request = async (operation: any) => {
         const token = await AsyncStorage.getItem('jwt');
+        console.log(token);
         return operation.setContext({
           headers: {Authorization: `Bearer ${token}`},
         });
@@ -42,7 +44,6 @@ const App = () => {
                 });
               })
               .catch(observer.error.bind(observer));
-
             return () => {
               if (handle) handle.unsubscribe();
             };
@@ -61,6 +62,53 @@ const App = () => {
           lazy: true,
         },
       });
+      const token = await AsyncStorage.getItem('jwt');
+      const stateLink = withClientState({
+        cache,
+        defaults: {
+          auth: {
+            __typename: 'Auth',
+            isLoggedIn: Boolean(token),
+          },
+        },
+        resolvers: {
+          Mutation: {
+            updateNetworkStatus: (_, {isConnected}, {cache}) => {
+              const data = {
+                networkStatus: {
+                  __typename: 'NetworkStatus',
+                  isConnected,
+                },
+              };
+              cache.writeData({data});
+              return null;
+            },
+            logUserIn: async (_, {token}, {cache}) => {
+              await AsyncStorage.setItem('isLoggedIn', 'true');
+              await AsyncStorage.setItem('jwt', token);
+              console.log('??????');
+              cache.writeData({
+                data: {
+                  __typename: 'Auth',
+                  isLoggedIn: true,
+                },
+              });
+              return null;
+            },
+            logUserOut: async (_, __, {cache}) => {
+              await AsyncStorage.setItem('isLoggedIn', 'false');
+
+              cache.writeData({
+                data: {
+                  __typename: 'Auth',
+                  isLoggedIn: false,
+                },
+              });
+              return null;
+            },
+          },
+        },
+      });
 
       const client = new ApolloClient({
         link: ApolloLink.from([
@@ -72,12 +120,12 @@ const App = () => {
               console.log(networkError);
             }
           }),
+
           requestLink,
           split(
             // split based on operation type
             ({query}) => {
               const definition = getMainDefinition(query);
-              console.log(definition.operation);
               return (
                 definition.kind === 'OperationDefinition' &&
                 definition.operation === 'subscription'
@@ -88,6 +136,41 @@ const App = () => {
           ),
         ]),
         cache,
+        resolvers: {
+          Mutation: {
+            logUserIn: async (_, {token}, {cache}) => {
+              await AsyncStorage.setItem('isLoggedIn', 'true');
+              await AsyncStorage.setItem('jwt', token);
+              console.log('??????');
+              cache.writeData({
+                data: {
+                  __typename: 'Auth',
+                  isLoggedIn: true,
+                },
+              });
+              return null;
+            },
+            logUserOut: async (_, __, {cache}) => {
+              await AsyncStorage.setItem('isLoggedIn', 'false');
+              await AsyncStorage.removeItem('jwt');
+              const aa = await AsyncStorage.getItem('isLoggedIn');
+              console.log('??머야??');
+              cache.writeData({
+                data: {
+                  __typename: 'Auth',
+                  isLoggedIn: false,
+                },
+              });
+              return null;
+            },
+          },
+        },
+      });
+      client.writeData({
+        data: {
+          __typename: 'Auth',
+          isLoggedIn: Boolean(token),
+        },
       });
       setLoaded(true);
       setClient(client);
@@ -97,9 +180,11 @@ const App = () => {
       console.log(e);
     }
   };
+
   useEffect(() => {
     preLoad();
   }, []);
+
   return loaded && client && splashFinish ? (
     <ApolloProvider client={client}>
       <ThemeProvider theme={styles}>

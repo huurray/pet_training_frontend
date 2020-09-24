@@ -1,12 +1,21 @@
-import React, {FunctionComponent} from 'react';
+import React, {SFC} from 'react';
 import {Text, View, Image, StyleSheet} from 'react-native';
 import {ScrollView} from 'react-native-gesture-handler';
 import constant from '../../../constant';
 import MainImageView from './viewComponents/mainImageView/MainImageView';
 import AdvertisementView from './viewComponents/advertisementView/AdvertisementView';
 import Question from './viewComponents/question/Question';
+import {
+  NavigationScreenProp,
+  NavigationState,
+  NavigationParams,
+} from 'react-navigation';
 
-const Home: FunctionComponent<void> = ({}) => {
+interface Props {
+  navigation: NavigationScreenProp<NavigationState, NavigationParams>;
+}
+
+const Home: SFC<Props> = ({navigation}) => {
   return (
     <ScrollView contentContainerStyle={{flexGrow: 1}}>
       <View style={{flex: 1, backgroundColor: 'white'}}>
@@ -17,8 +26,10 @@ const Home: FunctionComponent<void> = ({}) => {
             source={require('../../../assets/image/logo.png')}
           />
         </View>
-        <MainImageView />
-        <AdvertisementView />
+        <MainImageView navigation={navigation} />
+        <View style={{marginTop: 20}}>
+          <AdvertisementView />
+        </View>
         <Question />
       </View>
     </ScrollView>
@@ -28,10 +39,9 @@ const Home: FunctionComponent<void> = ({}) => {
 const styles = StyleSheet.create({
   header: {
     width: constant.width,
-    justifyContent: 'center',
     alignItems: 'center',
-    paddingTop: 10,
-    paddingBottom: 10,
+    paddingTop: 20,
+    paddingBottom: 2,
   },
   headerImage: {
     width: constant.width / 4,
