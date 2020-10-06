@@ -8,6 +8,7 @@ import {
 import {ScrollView, TouchableOpacity} from 'react-native-gesture-handler';
 import constant from '../../../constant';
 import {IoniconsIcons} from '../../components/icons/RnIcons';
+import PostScreenView from './seePost/PostScreenView';
 
 interface Props {
   navigation: NavigationScreenProp<NavigationState, NavigationParams>;
@@ -18,17 +19,13 @@ const Community: FunctionComponent<Props> = ({navigation}) => {
     <>
       <View style={styles.header}>
         <Text style={{fontWeight: '700'}}>커뮤니티</Text>
-        <TouchableOpacity onPress={() => null}>
+        <TouchableOpacity onPress={() => navigation.navigate('CreatePostView')}>
           <View>
             <IoniconsIcons name={'pencil-sharp'} size={20} color={'black'} />
           </View>
         </TouchableOpacity>
       </View>
-      <ScrollView contentContainerStyle={{flexGrow: 1}}>
-        <View style={{flex: 1, backgroundColor: 'white'}}>
-          <Text></Text>
-        </View>
-      </ScrollView>
+      <PostScreenView navigation={navigation} />
     </>
   );
 };

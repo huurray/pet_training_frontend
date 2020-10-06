@@ -1,10 +1,13 @@
-import React, {FunctionComponent} from 'react';
+import React, {FunctionComponent, useState} from 'react';
 import {View, Text} from 'react-native';
 import cStyles from '../../../../../cStyles';
 import constant from '../../../../../constant';
+import SmallListView from './SmallListView';
+import {TouchableWithoutFeedback} from 'react-native-gesture-handler';
 
-const Question: FunctionComponent<any> = ({}) => {
-  const kindOfPet = ['강아지', '고양이', '미어캣', '앵무새', '이구아나'];
+const Question: FunctionComponent<any> = ({navigation}) => {
+  const kindOfPet = ['강아지', '고양이'];
+  const [petType, setPetType] = useState('강아지');
   return (
     <View>
       <View
@@ -26,28 +29,36 @@ const Question: FunctionComponent<any> = ({}) => {
           marginLeft: constant.moderateScale(10),
         }}>
         {kindOfPet.map((pet, index) => (
-          <View
-            key={index}
-            style={{
-              width: constant.width / 5,
-              height: constant.width / 12,
-              borderWidth: 1,
-              borderColor: cStyles.SwiperDeactiveColor,
-              borderRadius: constant.width / 6 / 2,
-              justifyContent: 'center',
-              alignItems: 'center',
-              marginRight: 10,
-            }}>
-            <Text
+          <TouchableWithoutFeedback key={index} onPress={() => setPetType(pet)}>
+            <View
               style={{
-                color: cStyles.SwiperDeactiveColor,
-                fontSize: constant.moderateScale(12),
+                width: constant.width / 5,
+                height: constant.width / 12,
+                borderWidth: 1,
+                borderColor:
+                  petType === pet
+                    ? cStyles.ButtonActiveColor
+                    : cStyles.SwiperDeactiveColor,
+                borderRadius: constant.width / 6 / 2,
+                backgroundColor:
+                  petType === pet ? cStyles.ButtonActiveColor : null,
+                justifyContent: 'center',
+                alignItems: 'center',
+                marginRight: 10,
               }}>
-              {pet}
-            </Text>
-          </View>
+              <Text
+                style={{
+                  color:
+                    petType === pet ? 'white' : cStyles.SwiperDeactiveColor,
+                  fontSize: constant.moderateScale(12),
+                }}>
+                {pet}
+              </Text>
+            </View>
+          </TouchableWithoutFeedback>
         ))}
       </View>
+      <SmallListView navigation={navigation} petType={petType} />
     </View>
   );
 };

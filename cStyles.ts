@@ -5,4 +5,5 @@ export default {
   SwiperActiveColor: '#a1d5f9',
   SwiperDeactiveColor: '#c2ccd5',
   BorderLightGrayColor: '#eeeeee',
+  ButtonActiveColor: '#96c0dd',
 };

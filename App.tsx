@@ -120,7 +120,6 @@ const App = () => {
               console.log(networkError);
             }
           }),
-
           requestLink,
           split(
             // split based on operation type
@@ -154,7 +153,7 @@ const App = () => {
               await AsyncStorage.setItem('isLoggedIn', 'false');
               await AsyncStorage.removeItem('jwt');
               const aa = await AsyncStorage.getItem('isLoggedIn');
-              console.log('??머야??');
+
               cache.writeData({
                 data: {
                   __typename: 'Auth',

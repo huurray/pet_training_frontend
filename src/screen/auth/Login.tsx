@@ -10,6 +10,7 @@ import {
   IS_LOGGED_IN,
   SEE_IS_LOGGED_IN,
 } from './AuthQueries';
+import {NaverLogin, getProfile} from '@react-native-seoul/naver-login';
 
 if (!KakaoLogins) {
   console.error('Module is Not Linked');
@@ -33,7 +34,7 @@ export default function App() {
   const [profile, setProfile] = useState<TYPE_PROFILE_EMPTY>(PROFILE_EMPTY);
   const {id, email, profile_image_url: photo} = profile;
   const [isLoading, setIsLoading] = useState(false);
-
+  console.log(profile);
   const kakaoLogin = () => {
     KakaoLogins.login([KAKAO_AUTH_TYPES.Talk, KAKAO_AUTH_TYPES.Account])
       .then((result) => {
@@ -119,6 +120,46 @@ export default function App() {
     changeCheckLoginHandle();
   }, [data]);
 
+  const [naverToken, setNaverToken] = React.useState(null);
+
+  const iosKeys = {
+    kConsumerKey: 'VC5CPfjRigclJV_TFACU',
+    kConsumerSecret: 'f7tLFw0AHn',
+    kServiceAppName: '테스트앱(iOS)',
+    kServiceAppUrlScheme: 'testapp', // only for iOS
+  };
+
+  const androidKeys = {
+    kConsumerKey: 'QfXNXVO8RnqfbPS9x0LR',
+    kConsumerSecret: '6ZGEYZabM9',
+    kServiceAppName: '테스트앱(안드로이드)',
+  };
+
+  const initials = Platform.OS === 'ios' ? iosKeys : androidKeys;
+
+  const naverLogin = (props) => {
+    return new Promise((resolve, reject) => {
+      NaverLogin.login(props, (err, token) => {
+        console.log(`\n\n  Token is fetched  :: ${token} \n\n`);
+        setNaverToken(token);
+        if (err) {
+          reject(err);
+          return;
+        }
+        resolve(token);
+        getUserProfile();
+      });
+    });
+  };
+
+  const getUserProfile = async () => {
+    const profileResult = await getProfile(naverToken.accessToken);
+    if (profileResult.resultcode === '024') {
+      console.log('로그인 실패');
+    }
+    console.log('profileResult', profileResult);
+  };
+
   return (
     <ScrollView contentContainerStyle={{flexGrow: 1}}>
       <View style={{flex: 1, justifyContent: 'center', alignItems: 'center'}}>
@@ -140,6 +181,28 @@ export default function App() {
             />
             <Text style={{color: '#2E101D', fontWeight: '700', marginLeft: 10}}>
               카카오로 시작하기
+            </Text>
+          </View>
+        </TouchableOpacity>
+        <TouchableOpacity onPress={() => naverLogin(initials)}>
+          <View
+            style={{
+              width: constant.width / 2,
+              height: constant.width / 7,
+              backgroundColor: '#04CF5C',
+              justifyContent: 'center',
+              alignItems: 'center',
+              borderRadius: 10,
+              flexDirection: 'row',
+              marginTop: 10,
+            }}>
+            {/* <Image
+              source={require('../../../assets/image/kakaologo.png')}
+              style={{width: constant.width / 13}}
+              resizeMode={'contain'}
+            /> */}
+            <Text style={{color: 'white', fontWeight: '700', marginLeft: 10}}>
+              네이버로 시작하기
             </Text>
           </View>
         </TouchableOpacity>

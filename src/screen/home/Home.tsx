@@ -30,7 +30,7 @@ const Home: SFC<Props> = ({navigation}) => {
         <View style={{marginTop: 20}}>
           <AdvertisementView />
         </View>
-        <Question />
+        <Question navigation={navigation} />
       </View>
     </ScrollView>
   );
