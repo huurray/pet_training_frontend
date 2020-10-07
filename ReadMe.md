@@ -10,6 +10,8 @@
 - [ ] 네이버 로그인 적용 (IOS 적용필요)
   - getPofile 미완
 - [ ] 구글 로그인 적용
+
+## 포스트(업로드/수정/삭제 등) - Rich Text Editor
 - [ ] Portrait Rock(IOS 적용필요)
 - [ ] react-native-video-progrss(IOS 적용필요) - 비디오 인코딩(COMPRESSION)
 - [x] ~~Post 업로드 기능제작~~
