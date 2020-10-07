@@ -1,4 +1,4 @@
-import React, {useState} from 'react';
+import React, {useState, SFC} from 'react';
 import {View, Text, StyleSheet} from 'react-native';
 import {
   convertToHtmlString,
@@ -7,11 +7,14 @@ import {
 import HTML from 'react-native-render-html';
 import constant from '../../../../constant';
 import FastImage from 'react-native-fast-image';
-import Video from 'react-native-video';
 import {MaterialIcons} from '../../../components/icons/RnIcons';
 import cStyles from '../../../../cStyles';
 
-const PostText = ({text}) => {
+interface Props {
+  text: string;
+}
+
+const PostText: SFC<Props> = ({text}) => {
   const fontSize = 15;
   const objectText = convertToObject(text);
 
@@ -49,19 +52,8 @@ const PostText = ({text}) => {
             return children.splice(0, 5);
           }
         }}
-        // contentWidth={contentWidth}
       />
-      {plus ? (
-        <Text
-          style={{
-            fontWeight: '700',
-            textDecorationLine: 'underline',
-            marginBottom: 10,
-            marginTop: 10,
-          }}>
-          더보기
-        </Text>
-      ) : null}
+      {plus ? <Text style={styles.plusText}>더보기</Text> : null}
       {convertToObject(summaryImage).length === 1 ? (
         convertToObject(summaryImage).map((item: any, index) => (
           <View key={index}>
@@ -69,16 +61,9 @@ const PostText = ({text}) => {
               <>
                 <FastImage
                   source={{uri: item.url.substr(0, item.url.length - 10)}}
-                  style={{width: constant.width, height: 300}}
+                  style={styles.image}
                 />
-                <View
-                  style={{
-                    position: 'absolute',
-                    width: constant.width,
-                    height: 300,
-                    justifyContent: 'center',
-                    alignItems: 'center',
-                  }}>
+                <View style={styles.playIcon}>
                   <MaterialIcons
                     name={'play-circle-fill'}
                     size={60}
@@ -87,10 +72,7 @@ const PostText = ({text}) => {
                 </View>
               </>
             ) : (
-              <FastImage
-                source={{uri: item.url}}
-                style={{width: constant.width, height: 300}}
-              />
+              <FastImage source={{uri: item.url}} style={styles.image} />
             )}
           </View>
         ))
@@ -124,16 +106,6 @@ const PostText = ({text}) => {
                   </View>
                 </>
               ) : (
-                // <Video
-                //   source={{uri: item.url.substr(0, item.url.length - 10)}}
-                //   style={{
-                //     width: constant.width / 2 || 0,
-                //     height: 150,
-                //     marginRight: index === 0 ? 1 : null || 0,
-                //   }} // Can be a URL or a local file.
-                //   // Store reference
-                //   // Callback when video cannot be loaded
-                // />
                 <FastImage
                   source={{uri: item.url}}
                   style={{
@@ -167,22 +139,27 @@ const PostText = ({text}) => {
           ))}
         </View>
       ) : null}
-      {/* {convertToObject(summaryImage).map((item, index) => (    
-        <View key={index}>
-          <Image
-            source={{uri: item.url}}
-            style={{width: constant.width, height: 300}}
-          />
-        </View>
-      ))} */}
     </View>
   );
 };
 
 const styles = StyleSheet.create({
-  a: {
-    fontWeight: '300',
-    color: '#FF3366', // make links coloured pink
+  plusText: {
+    fontWeight: '700',
+    textDecorationLine: 'underline',
+    marginBottom: 10,
+    marginTop: 10,
+  },
+  image: {
+    width: constant.width,
+    height: 300,
+  },
+  playIcon: {
+    position: 'absolute',
+    width: constant.width,
+    height: 300,
+    justifyContent: 'center',
+    alignItems: 'center',
   },
 });
 

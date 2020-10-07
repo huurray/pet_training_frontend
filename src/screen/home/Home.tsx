@@ -10,6 +10,7 @@ import {
   NavigationState,
   NavigationParams,
 } from 'react-navigation';
+import {moderateScale} from 'react-native-size-matters';
 
 interface Props {
   navigation: NavigationScreenProp<NavigationState, NavigationParams>;
@@ -27,7 +28,7 @@ const Home: SFC<Props> = ({navigation}) => {
           />
         </View>
         <MainImageView navigation={navigation} />
-        <View style={{marginTop: 20}}>
+        <View style={styles.advertisementWrapper}>
           <AdvertisementView />
         </View>
         <Question navigation={navigation} />
@@ -40,12 +41,15 @@ const styles = StyleSheet.create({
   header: {
     width: constant.width,
     alignItems: 'center',
-    paddingTop: 20,
-    paddingBottom: 2,
+    paddingTop: moderateScale(20),
+    paddingBottom: moderateScale(2),
   },
   headerImage: {
     width: constant.width / 4,
     height: constant.height / 18,
+  },
+  advertisementWrapper: {
+    marginTop: moderateScale(20),
   },
 });
 

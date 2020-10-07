@@ -1,15 +1,20 @@
-import React, {useState, useEffect} from 'react';
-import {View, Text} from 'react-native';
+import React, {useState, useEffect, SFC} from 'react';
+import {View, Text, StyleSheet} from 'react-native';
 import {
   convertToHtmlString,
   convertToObject,
 } from 'react-native-cn-richtext-editor';
 import FastImage from 'react-native-fast-image';
 import constant from '../../../../../constant';
+import {moderateScale} from 'react-native-size-matters';
 
-const SmallListViewText = ({title, text}) => {
+interface Props {
+  title: string;
+  text: string;
+}
+
+const SmallListViewText: SFC<Props> = ({title, text}) => {
   const objectText = convertToObject(text);
-
   const video =
     objectText.filter(
       (obj: any) =>
@@ -19,7 +24,7 @@ const SmallListViewText = ({title, text}) => {
   const image =
     objectText.filter((obj: any) => obj.component === 'image')[0] || null;
 
-  const representImage = video ? video : image ? image : [];
+  const representImage: any = video ? video : image ? image : [];
 
   const ImageView = () => {
     let url = representImage.url;
@@ -39,24 +44,16 @@ const SmallListViewText = ({title, text}) => {
             ? {uri: url}
             : require('../../../../../assets/image/basicImage.jpg')
         }
-        style={{
-          width: constant.width / 2.7,
-          height: constant.width / 3.7,
-          borderRadius: 10,
-        }}
+        style={styels.image}
       />
     );
   };
 
-  const summaryText = convertToHtmlString(
-    objectText.filter((obj: any) => obj.component === 'text'),
-  );
-
   const textArray = objectText.filter((obj: any) => obj.component === 'text');
 
-  const contentArray = textArray.map((arr) => arr.content);
+  const contentArray = textArray.map((arr: any) => arr.content);
 
-  const textTest = [];
+  const textTest: any = [];
   const [absorptionText, setAbsorptionText] = useState('');
 
   useEffect(() => {
@@ -71,43 +68,12 @@ const SmallListViewText = ({title, text}) => {
     }
   }, []);
 
-  // 첫번째 - content 병합
-  // 두번째 -
-
   const SummaryTextView = () => {
-    const [plus, setPlus] = useState<boolean>(false);
-    const renderers = {
-      p: (htmlAttribs, children, passProps) => {
-        return (
-          <Text key={Math.random().toString()} style={{fontSize: 15}}>
-            {children}
-          </Text>
-        );
-      },
-    };
-
     return (
-      <View style={{}}>
-        <View style={{width: constant.width / 2.9}}>
-          <Text ellipsizeMode={'tail'} numberOfLines={2}>
-            {absorptionText}
-          </Text>
-        </View>
-        {/* <HTML
-          html={summaryText}
-          renderers={renderers}
-          containerStyle={{height: 100}}
-          //   alterChildren={(node) => {
-          //     const {children, name} = node;
-          //     if (children && children.length) {
-          //       if (children && children.length > 2) {
-          //         setPlus(true);
-          //       }
-          //       return children.splice(0, 5);
-          //     }
-          //   }}
-          // contentWidth={contentWidth}
-        /> */}
+      <View style={styels.textWrapper}>
+        <Text ellipsizeMode={'tail'} numberOfLines={2}>
+          {absorptionText}
+        </Text>
       </View>
     );
   };
@@ -116,11 +82,26 @@ const SmallListViewText = ({title, text}) => {
     <View>
       <ImageView />
       <View>
-        <Text style={{fontWeight: '700', fontSize: 15}}>{title}</Text>
+        <Text style={styels.title}>{title}</Text>
       </View>
       <SummaryTextView />
     </View>
   );
 };
+
+const styels = StyleSheet.create({
+  image: {
+    width: constant.width / 2.7,
+    height: constant.width / 3.7,
+    borderRadius: moderateScale(10),
+  },
+  title: {
+    fontWeight: '700',
+    fontSize: moderateScale(15),
+  },
+  textWrapper: {
+    width: constant.width / 2.9,
+  },
+});
 
 export default SmallListViewText;

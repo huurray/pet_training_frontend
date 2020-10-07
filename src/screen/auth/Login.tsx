@@ -1,5 +1,5 @@
 import React, {useState, useEffect} from 'react';
-import {Text, View, Image} from 'react-native';
+import {Text, View, Image, Platform} from 'react-native';
 import KakaoLogins, {KAKAO_AUTH_TYPES} from '@react-native-seoul/kakao-login';
 import {TouchableOpacity, ScrollView} from 'react-native-gesture-handler';
 import constant from '../../../constant';
@@ -120,7 +120,7 @@ export default function App() {
     changeCheckLoginHandle();
   }, [data]);
 
-  const [naverToken, setNaverToken] = React.useState(null);
+  const [naverToken, setNaverToken] = React.useState<any>(null);
 
   const iosKeys = {
     kConsumerKey: 'VC5CPfjRigclJV_TFACU',
@@ -196,11 +196,11 @@ export default function App() {
               flexDirection: 'row',
               marginTop: 10,
             }}>
-            {/* <Image
+            <Image
               source={require('../../../assets/image/kakaologo.png')}
               style={{width: constant.width / 13}}
               resizeMode={'contain'}
-            /> */}
+            />
             <Text style={{color: 'white', fontWeight: '700', marginLeft: 10}}>
               네이버로 시작하기
             </Text>

@@ -253,17 +253,6 @@ const CreatePostHandle = ({
             alignItems: 'center',
             backgroundColor: 'white',
           }}>
-          {/* <Text
-          style={{
-            fontWeight: '700',
-            // transform: [{scaleY: -1}],
-            fontSize: 15,
-            marginBottom: 50,
-            color: 'black',
-          }}>
-          채팅방에 입장 중입니다
-        </Text> */}
-
           <LoadingDots
             dots={4}
             colors={[
@@ -271,10 +260,6 @@ const CreatePostHandle = ({
               cStyles.SwiperDeactiveColor,
               cStyles.TabActiveColor,
               cStyles.TabDeactiveColor,
-              // styles.darkGreyColor,
-              // styles.darkGreyColor,
-              // styles.darkGreyColor,
-              // styles.darkGreyColor,
             ]}
             size={15}
           />

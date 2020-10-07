@@ -1,4 +1,4 @@
-import React, {useState} from 'react';
+import React, {useState, SFC} from 'react';
 import {View, Text, Image, TouchableWithoutFeedback} from 'react-native';
 import {ScrollView} from 'react-native-gesture-handler';
 import PostText from './PostText';
@@ -10,8 +10,17 @@ import VideoPlayerView from './VideoPlayerView';
 import FastImage from 'react-native-fast-image';
 import {MaterialIcons} from '../../../components/icons/RnIcons';
 import cStyles from '../../../../cStyles';
+import {
+  NavigationScreenProp,
+  NavigationState,
+  NavigationParams,
+} from 'react-navigation';
 
-const SeeDetailPost = ({navigation}) => {
+interface Props {
+  navigation: NavigationScreenProp<NavigationState, NavigationParams>;
+}
+
+const SeeDetailPost: SFC<Props> = ({navigation}) => {
   const post = navigation.getParam('post');
 
   const renderers = {
@@ -36,7 +45,6 @@ const SeeDetailPost = ({navigation}) => {
         <View key={Math.random().toString()} style={{marginTop: 10}}>
           <TouchableWithoutFeedback
             onPress={() => {
-              console.log(111);
               navigation.navigate('VideoPlayerView', {url});
             }}>
             <View>
@@ -69,67 +77,6 @@ const SeeDetailPost = ({navigation}) => {
               </View>
             </View>
           </TouchableWithoutFeedback>
-          {/* <VideoPlayer
-            video={{
-              uri: url,
-            }}
-            videoWidth={constant.width}
-            videoHeight={
-              (constant.width * parseInt(htmlAttribs.height)) /
-              parseInt(htmlAttribs.width)
-            }
-            autoplay={true}
-            thumbnail={{
-              uri: url,
-            }}
-            onPlayPress={(e) => console.log(e)}
-            onStart={(e) => console.log(e)}
-          /> */}
-          {/* <Video
-            source={{uri: url}} // Can be a URL or a local file.
-            style={{
-              width: constant.width,
-              height:
-                (constant.width * parseInt(htmlAttribs.height)) /
-                parseInt(htmlAttribs.width),
-            }}
-            paused={false}
-            onLoad={(e) => {
-              setPaused(true);
-              console.log(e);
-            }}
-            // onLoadStart={(e) => console.log(e)}
-            // Store reference
-            //  onBuffer={this.onBuffer}                // Callback when remote video is buffering
-            //  onError={this.videoError}               // Callback when video cannot be loaded
-          /> */}
-          {/* <VideoPlayerView /> */}
-          {/* {paused ? (
-            <FastImage
-              source={{uri: url}}
-              style={{
-                width: constant.width,
-                height:
-                  (constant.width * parseInt(htmlAttribs.height)) /
-                  parseInt(htmlAttribs.width),
-              }}
-            />
-          ) : (
-            <Video
-              source={{uri: url}} // Can be a URL or a local file.
-              style={{
-                width: constant.width,
-                height:
-                  (constant.width * parseInt(htmlAttribs.height)) /
-                  parseInt(htmlAttribs.width),
-              }}
-              paused={paused}
-              onLoad={(e) => setPaused(true)}
-              // Store reference
-              //  onBuffer={this.onBuffer}                // Callback when remote video is buffering
-              //  onError={this.videoError}               // Callback when video cannot be loaded
-            />
-          )} */}
         </View>
       ) : (
         <View
@@ -167,20 +114,7 @@ const SeeDetailPost = ({navigation}) => {
           <Text style={{fontWeight: '700', fontSize: 20, marginBottom: 10}}>
             {post.title}
           </Text>
-          <HTML
-            html={post.text}
-            renderers={renderers}
-            // alterChildren={(node) => {
-            //   const {children, name} = node;
-            //   if (children && children.length) {
-            //     if (children && children.length > 6) {
-            //       setPlus(true);
-            //     }
-            //     return children.splice(0, 5);
-            //   }
-            // }}
-            // contentWidth={contentWidth}
-          />
+          <HTML html={post.text} renderers={renderers} />
         </View>
       </View>
     </ScrollView>

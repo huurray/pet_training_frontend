@@ -1,10 +1,18 @@
-import React, {Component, useState, useRef} from 'react';
-import {Platform, StyleSheet, Text, View} from 'react-native';
+import React, {useState, useRef, SFC} from 'react';
+import {StyleSheet, Text, View} from 'react-native';
 import Video from 'react-native-video';
 import MediaControls, {PLAYER_STATES} from 'react-native-media-controls';
-import constant from '../../../../constant';
+import {
+  NavigationScreenProp,
+  NavigationState,
+  NavigationParams,
+} from 'react-navigation';
 
-const VideoPlayerView = ({navigation}) => {
+interface Props {
+  navigation: NavigationScreenProp<NavigationState, NavigationParams>;
+}
+
+const VideoPlayerView: SFC<Props> = ({navigation}) => {
   const [currentTime, setCurrentTime] = useState(0);
   const [duration, setDuration] = useState(0);
   const [isFullScreen, setSsFullScreen] = useState(false);
@@ -34,20 +42,16 @@ const VideoPlayerView = ({navigation}) => {
       setCurrentTime(Math.ceil(data.currentTime));
     }
   };
-
   const onLoad = (data) => {
     setIsLoading(false);
     setDuration(data.duration);
   };
-
-  const onLoadStart = (data) => {
+  const onLoadStart = () => {
     setIsLoading(true);
   };
-
   const onEnd = () => {
     setPlayerState(PLAYER_STATES.ENDED);
   };
-
   const onFullScreen = () => {
     if (screenType == 'contain') {
       setScreenType('cover');
@@ -56,11 +60,6 @@ const VideoPlayerView = ({navigation}) => {
     }
   };
 
-  const renderToolbar = () => (
-    <View>
-      <Text> toolbar </Text>
-    </View>
-  );
   const onSeeking = (currentTime) => {
     setCurrentTime(Math.ceil(currentTime));
   };
@@ -70,7 +69,7 @@ const VideoPlayerView = ({navigation}) => {
       <Video
         onEnd={() => onEnd()}
         onLoad={(data) => onLoad(data)}
-        onLoadStart={(data) => onLoadStart(data)}
+        onLoadStart={() => onLoadStart()}
         onProgress={(data) => onProgress(data)}
         paused={paused}
         ref={videoPlayer}
@@ -94,7 +93,10 @@ const VideoPlayerView = ({navigation}) => {
         progress={currentTime}
         fadeOutDelay={2000}
         showOnStart={false}
-        toolbar={() => renderToolbar()}>
+        toolbarStyle={{}}
+        containerStyle={{}}
+        isFullScreen={false}
+        sliderStyle={{containerStyle: {}, trackStyle: {}, thumbStyle: {}}}>
         <MediaControls.Toolbar>
           <View style={styles.toolbar}>
             <Text>I'm a custom toolbar </Text>
@@ -114,7 +116,10 @@ const VideoPlayerView = ({navigation}) => {
           playerState={playerState}
           progress={currentTime}
           fadeOutDelay={2000}
-          toolbar={() => renderToolbar()}>
+          toolbarStyle={{}}
+          containerStyle={{}}
+          isFullScreen={false}
+          sliderStyle={{containerStyle: {}, trackStyle: {}, thumbStyle: {}}}>
           <MediaControls.Toolbar>
             <View style={styles.toolbar}>
               <Text>I'm a custom toolbar </Text>

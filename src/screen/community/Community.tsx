@@ -5,10 +5,11 @@ import {
   NavigationState,
   NavigationParams,
 } from 'react-navigation';
-import {ScrollView, TouchableOpacity} from 'react-native-gesture-handler';
+import {TouchableOpacity} from 'react-native-gesture-handler';
 import constant from '../../../constant';
 import {IoniconsIcons} from '../../components/icons/RnIcons';
 import PostScreenView from './seePost/PostScreenView';
+import {moderateScale, verticalScale} from 'react-native-size-matters';
 
 interface Props {
   navigation: NavigationScreenProp<NavigationState, NavigationParams>;
@@ -21,7 +22,11 @@ const Community: FunctionComponent<Props> = ({navigation}) => {
         <Text style={{fontWeight: '700'}}>커뮤니티</Text>
         <TouchableOpacity onPress={() => navigation.navigate('CreatePostView')}>
           <View>
-            <IoniconsIcons name={'pencil-sharp'} size={20} color={'black'} />
+            <IoniconsIcons
+              name={'pencil-sharp'}
+              size={moderateScale(20)}
+              color={'black'}
+            />
           </View>
         </TouchableOpacity>
       </View>
@@ -33,10 +38,10 @@ const Community: FunctionComponent<Props> = ({navigation}) => {
 const styles = StyleSheet.create({
   header: {
     width: constant.width,
-    height: 70,
+    height: verticalScale(50),
     backgroundColor: 'white',
     elevation: 2,
-    paddingLeft: 20,
+    paddingLeft: moderateScale(20),
     flexDirection: 'row',
     justifyContent: 'space-between',
     alignItems: 'center',

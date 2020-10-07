@@ -1,5 +1,5 @@
-import React, {useState} from 'react';
-import {View, Text} from 'react-native';
+import React, {useState, SFC} from 'react';
+import {View, Text, StyleSheet} from 'react-native';
 import {useQuery} from 'react-apollo-hooks';
 import {SEE_POST} from '../../../community/CommunityQueries';
 import {
@@ -8,8 +8,19 @@ import {
 } from 'react-native-gesture-handler';
 import PostText from '../../../community/seePost/PostText';
 import SmallListViewText from './SmallListViewText';
+import {moderateScale} from 'react-native-size-matters';
+import {
+  NavigationScreenProp,
+  NavigationParams,
+  NavigationState,
+} from 'react-navigation';
 
-const SmallListView = ({navigation, petType}) => {
+interface Props {
+  navigation: NavigationScreenProp<NavigationState, NavigationParams>;
+  petType: string;
+}
+
+const SmallListView: SFC<Props> = ({navigation, petType}) => {
   const {data, loading} = useQuery(SEE_POST, {
     variables: {
       petType,
@@ -33,13 +44,13 @@ const SmallListView = ({navigation, petType}) => {
     <ScrollView
       horizontal
       showsHorizontalScrollIndicator={false}
-      contentContainerStyle={{flexGrow: 1}}>
-      <View style={{flexDirection: 'row', margin: 10}}>
+      contentContainerStyle={styles.container}>
+      <View style={styles.wrapper}>
         {posts &&
           posts.map((post, index) => (
             <TouchableWithoutFeedback
               key={index}
-              style={{marginRight: 10}}
+              style={styles.listWrapper}
               onPress={() => navigation.navigate('SeeDetailPost', {post})}>
               <SmallListViewText title={post.title} text={post.text} />
             </TouchableWithoutFeedback>
@@ -48,5 +59,18 @@ const SmallListView = ({navigation, petType}) => {
     </ScrollView>
   );
 };
+
+const styles = StyleSheet.create({
+  container: {
+    flexGrow: 1,
+  },
+  wrapper: {
+    flexDirection: 'row',
+    margin: moderateScale(10),
+  },
+  listWrapper: {
+    marginRight: moderateScale(10),
+  },
+});
 
 export default SmallListView;
